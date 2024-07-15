@@ -1,7 +1,7 @@
 import type { RuntimeRule } from './type'
 import * as utils from './utils'
 
-const placeholder = '__KKOPITE_AWESOME_HOVER_COLON'
+const placeholder = '__KKOPITE_AWESOME_HOVER_COLON__'
 const placeholderRegex = new RegExp(placeholder, 'g')
 
 export function parseFuncAndParma(str: string) {
@@ -46,5 +46,5 @@ export function parseBody(hoverString: string, rule: RuntimeRule) {
     })
   }).join('\n')
 
-  return `## ${rule.name}\n\n${res}`
+  return res
 }
