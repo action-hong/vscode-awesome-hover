@@ -28,10 +28,10 @@ export function parseBody(hoverString: string, rule: RuntimeRule) {
 
   const values = typeof body === 'string' ? [body] : body
 
-  return values.map((item) => {
+  const res = values.map((item) => {
     return item.replace(/\$\{(.+?)\}/g, (_, template) => {
       const [index, ...arr] = template.split('/') as string[]
-      return arr.reduce((prev, item) => {
+      return  arr.reduce((prev, item) => {
         const {
           name,
           params
@@ -45,4 +45,6 @@ export function parseBody(hoverString: string, rule: RuntimeRule) {
       }, result[index as any])
     })
   }).join('\n')
+
+  return `## ${rule.name}\n\n${res}`
 }

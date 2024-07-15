@@ -37,7 +37,9 @@ describe('should work', () => {
     const hoverString = '0114000a2d010301010000000101'
     const rule = presetRules.find(item => item.name === 'evil')
     expect(parseBody(hoverString, rule!)).toMatchInlineSnapshot(`
-      "|key|value|
+      "## evil
+
+      |key|value|
       |---|-----|
       |开关|01|
       |开始时间|20:00|
@@ -57,6 +59,10 @@ describe('should work', () => {
   it('should work for format time', () => {
     const time = '1721051317521'
     const rule = presetRules.find(item => item.name === 'timestamp')
-    expect(parseBody(time, rule!)).toMatchInlineSnapshot(`"2024-07-15 21:48:37"`)
+    expect(parseBody(time, rule!)).toMatchInlineSnapshot(`
+      "##timestamp
+
+      2024-07-15 21:48:37"
+    `)
   })
 })

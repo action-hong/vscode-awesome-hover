@@ -79,6 +79,9 @@
     "typecheck": "tsc --noEmit",
     "release": "bumpp && nr publish"
   },
+  "dependencies": {
+    "dayjs": "^1.11.11"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^2.21.1",
     "@antfu/ni": "^0.21.12",
@@ -94,8 +97,5 @@
     "typescript": "^5.4.5",
     "vite": "^5.3.1",
     "vitest": "^1.6.0"
-  },
-  "dependencies": {
-    "dayjs": "^1.11.11"
   }
 }
