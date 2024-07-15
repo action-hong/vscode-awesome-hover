@@ -1,17 +1,45 @@
+import type { RuntimeRule } from './type'
 import * as utils from './utils'
 
-export function parseBody(body: string[] | string, result: RegExpExecArray) {
-  const values = typeof body ==='string'? [body] : body
+const placeholder = '__KKOPITE_AWESOME_HOVER_COLON'
+const placeholderRegex = new RegExp(placeholder, 'g')
 
-  return values.map(item => {
-    // TODO: 内置函数： ${1/foo/boo} 等等
+export function parseFuncAndParma(str: string) {
+  // 确保参数中传递可以传递 ":"
+  const tempStr = str.replace(/\\:/g, placeholder)
+  // 如何 escape ":"
+  const [name, ...params] = tempStr.split(':')
+  return {
+    name,
+    params: params.map(item => item.replace(placeholderRegex, ':'))
+  }
+}
+
+export function parseBody(hoverString: string, rule: RuntimeRule) {
+
+  const {
+    regexIns,
+    body,
+  } = rule
+
+  const result = regexIns.exec(hoverString)
+
+  if (!result) return ''
+
+  const values = typeof body === 'string' ? [body] : body
+
+  return values.map((item) => {
     return item.replace(/\$\{(.+?)\}/g, (_, template) => {
       const [index, ...arr] = template.split('/') as string[]
       return arr.reduce((prev, item) => {
+        const {
+          name,
+          params
+        } = parseFuncAndParma(item)
         // @ts-expect-error do it
-        if (item in utils && typeof utils[item] === 'function') {
+        if (name in utils && typeof utils[name] === 'function') {
           // @ts-expect-error do it
-          return utils[item](prev)
+          return utils[name](prev, ...params)
         }
         return prev
       }, result[index as any])

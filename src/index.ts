@@ -44,11 +44,7 @@ export function activate(ctx: vscode.ExtensionContext) {
 
         // eslint-disable-next-line array-callback-return
         const result = rules.map((item) => {
-          const match = item.regexIns.exec(word)
-          if (match) {
-            // todo: 解析
-            return parseBody(item.body, match)
-          }
+          return parseBody(word, item)
         }).filter(Boolean)
           .join('\n-----')
 

@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+
 export function hex2Decimal(hex: string) {
   return Number.parseInt(hex, 16)
 }
@@ -34,7 +36,12 @@ export function pascalCase(str: string) {
   return str.replace(/([-_]\w)/g, (_, c) => c.toUpperCase().replace('-', '').replace('_', ''))
 }
 
-// TODO: 模板输入长度？
-export function padTwoZero(num: number) {
-  return num.toString().padStart(2, '0')
+export function toFilled(str: number | string, num = 2, fillString = '0') {
+  return str.toString().padStart(num, fillString)
+}
+
+export function formatTime(timeStamp: string, format: string) {
+  const stamp = timeStamp.toString().padEnd(13, '0')
+  const time = Number.parseInt(stamp)
+  return dayjs(time).format(format)
 }
