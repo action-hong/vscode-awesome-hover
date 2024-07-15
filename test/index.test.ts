@@ -8,7 +8,6 @@ const presetRules = rules.map(rule => ({
 }))
 
 describe('should work', () => {
-
   it('should work for get function name and params', () => {
     expect(parseFuncAndParma('foo:1:2:3')).toMatchInlineSnapshot(`
       {

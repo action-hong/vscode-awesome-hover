@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as vscode from 'vscode'
 import { EX_NAME, EX_RULES } from './constant'
 import type { Rule, RuntimeRule } from './type'
@@ -49,8 +48,4 @@ export function activate(ctx: vscode.ExtensionContext) {
       },
     }),
   )
-}
-
-export function deactivate() {
-
 }

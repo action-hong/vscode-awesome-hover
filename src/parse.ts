@@ -11,12 +11,11 @@ export function parseFuncAndParma(str: string) {
   const [name, ...params] = tempStr.split(':')
   return {
     name,
-    params: params.map(item => item.replace(placeholderRegex, ':'))
+    params: params.map(item => item.replace(placeholderRegex, ':')),
   }
 }
 
 export function parseBody(hoverString: string, rule: RuntimeRule) {
-
   const {
     regexIns,
     body,
@@ -24,17 +23,18 @@ export function parseBody(hoverString: string, rule: RuntimeRule) {
 
   const result = regexIns.exec(hoverString)
 
-  if (!result) return ''
+  if (!result)
+    return ''
 
   const values = typeof body === 'string' ? [body] : body
 
   const res = values.map((item) => {
     return item.replace(/\$\{(.+?)\}/g, (_, template) => {
       const [index, ...arr] = template.split('/') as string[]
-      return  arr.reduce((prev, item) => {
+      return arr.reduce((prev, item) => {
         const {
           name,
-          params
+          params,
         } = parseFuncAndParma(item)
         // @ts-expect-error do it
         if (name in utils && typeof utils[name] === 'function') {
