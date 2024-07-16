@@ -66,7 +66,19 @@
           }
         }
       }
-    }
+    },
+    "commands": [
+      {
+        "command": "awesome-hover.openJSFile",
+        "title": "Open JS File",
+        "category": "Awesome Hover"
+      },
+      {
+        "command": "awesome-hover.loadJSFile",
+        "title": "Load JS File",
+        "category": "Awesome Hover"
+      }
+    ]
   },
   "scripts": {
     "build": "tsup src/index.ts --external vscode",
