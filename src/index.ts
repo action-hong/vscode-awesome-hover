@@ -4,6 +4,7 @@ import type { Rule, RuntimeRule } from './type'
 import { parseBody } from './parse'
 import { JSFileLoader } from './loader'
 import { log } from './log'
+import { ConfigManager } from './config'
 
 // 1. 模板形式字符串(参考 vscode snippet 的语法)
 // 2. 模块化，自定义js方法返回md内容
@@ -15,6 +16,9 @@ export function activate(ctx: vscode.ExtensionContext) {
 
   const loader = new JSFileLoader(ctx)
   loader.init()
+
+  const configuration = new ConfigManager(ctx)
+  configuration.init()
 
   function refresh() {
     try {
@@ -64,7 +68,19 @@ export function activate(ctx: vscode.ExtensionContext) {
           log.appendLine(moduleResult)
           log.appendLine('rule result:')
           log.appendLine(ruleResult)
-          return new vscode.Hover(`${moduleResult}\n${ruleResult}`)
+          const config = configuration.getMarkdownConfiguration()
+          const ms = new vscode.MarkdownString(`${moduleResult}\n${ruleResult}`, config.supportThemeIcons)
+          ms.supportHtml = config.supportHtml
+          const it = config.isTrusted
+          if (typeof it === 'boolean') {
+            ms.isTrusted = it
+          }
+          else {
+            ms.isTrusted = {
+              enabledCommands: it,
+            }
+          }
+          return new vscode.Hover(ms)
         }
       },
     }),

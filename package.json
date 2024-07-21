@@ -64,6 +64,26 @@
               }
             }
           }
+        },
+        "awesome-hover.markdown": {
+          "type": "object",
+          "properties": {
+            "supportHtml": {
+              "type": "boolean",
+              "default": false,
+              "description": "Indicates that this markdown string can contain raw html tags. Defaults to `false`."
+            },
+            "supportThemeIcons": {
+              "type": "boolean",
+              "default": false,
+              "description": "Indicates that this markdown string can contain ThemeIcons"
+            },
+            "isTrusted": {
+              "type": ["boolean", "array"],
+              "default": false,
+              "description": "Indicates that this markdown string is from a trusted source. Only *trusted* markdown supports links that execute commands, e.g. `[Run it](command:myCommandId)"
+            }
+          }
         }
       }
     },
