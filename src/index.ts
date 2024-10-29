@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { EX_NAME, EX_RULES } from './constant'
+import { COMMAND_FORMAT, EX_NAME, EX_RULES } from './constant'
 import type { Rule, RuntimeRule } from './type'
 import { parseBody } from './parse'
 import { JSFileLoader } from './loader'
@@ -48,14 +48,10 @@ export function activate(ctx: vscode.ExtensionContext) {
         const word = document.getText(range)
 
         const module = loader.getModules()
-        log.appendLine(`module ${Object.keys(module).length}`)
 
-        const moduleResult = Object.entries(module).map(([_, value]) => {
-          if (typeof value === 'function') {
-            return value(word) || ''
-          }
-          return ''
-        }).filter(Boolean).join('\n-----')
+        const moduleResult = module.hover && typeof module.hover === 'function'
+          ? module.hover(word) || ''
+          : ''
 
         // 配置规则
         const ruleResult = rules.map((item) => {
@@ -83,6 +79,27 @@ export function activate(ctx: vscode.ExtensionContext) {
           return new vscode.Hover(ms)
         }
       },
+    }),
+  )
+
+  ctx.subscriptions.push(
+    vscode.commands.registerCommand(COMMAND_FORMAT, () => {
+      const textEditor = vscode.window.activeTextEditor
+      if (!textEditor)
+        return
+
+      const module = loader.getModules()
+      if (module.format && typeof module.format === 'function') {
+        const selection = textEditor.selection
+        const selectionText = textEditor.document.getText(selection)
+
+        const result = module.format(selectionText)
+        if (result) {
+          textEditor.edit((editBuilder) => {
+            editBuilder.replace(selection, result)
+          })
+        }
+      }
     }),
   )
 }

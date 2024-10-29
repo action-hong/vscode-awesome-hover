@@ -97,6 +97,11 @@
         "command": "awesome-hover.loadJSFile",
         "title": "Load JS File",
         "category": "Awesome Hover"
+      },
+      {
+        "command": "awesome-hover.format",
+        "title": "format select string (should has format function in js file)",
+        "category": "Awesome Hover"
       }
     ]
   },

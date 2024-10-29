@@ -2,7 +2,6 @@ import { Buffer } from 'node:buffer'
 import vm from 'node:vm'
 import { type ExtensionContext, Uri, commands, window, workspace } from 'vscode'
 import { COMMAND_LOAD_JS_FILE, COMMAND_OPEN_JS_FILE } from './constant'
-import { log } from './log'
 
 const FILENAME = 'awesome-loader.js'
 
@@ -54,7 +53,7 @@ export class JSFileLoader {
       }, () => {
         if (tryWrite) {
           // 写入一个空字符串
-          workspace.fs.writeFile(jsUri, Buffer.from(''))
+          workspace.fs.writeFile(jsUri, new Uint8Array(Buffer.from('')))
             .then(() => this.openJSFile(false))
         }
       })
