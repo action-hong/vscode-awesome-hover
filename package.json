@@ -2,7 +2,7 @@
   "publisher": "kkopite",
   "name": "awesome-hover",
   "displayName": "awesome-hover",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": true,
   "packageManager": "pnpm@9.3.0",
   "description": "",
@@ -79,7 +79,10 @@
               "description": "Indicates that this markdown string can contain ThemeIcons"
             },
             "isTrusted": {
-              "type": ["boolean", "array"],
+              "type": [
+                "boolean",
+                "array"
+              ],
               "default": false,
               "description": "Indicates that this markdown string is from a trusted source. Only *trusted* markdown supports links that execute commands, e.g. `[Run it](command:myCommandId)"
             }
