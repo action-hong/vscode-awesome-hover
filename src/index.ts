@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { COMMAND_FORMAT, EX_NAME, EX_RULES } from './constant'
+import { COMMAND_FORMAT, EX_HOVER, EX_INLAY_HINTS, EX_NAME, EX_RULES } from './constant'
 import type { Rule, RuntimeRule } from './type'
 import { parseBody } from './parse'
 import { JSFileLoader } from './loader'
@@ -12,6 +12,8 @@ import { ConfigManager } from './config'
 export function activate(ctx: vscode.ExtensionContext) {
   // 读取配置
   let rules: RuntimeRule[] = []
+  let hover = true
+  let inlayHints = true
   refresh()
 
   const loader = new JSFileLoader(ctx)
@@ -27,6 +29,8 @@ export function activate(ctx: vscode.ExtensionContext) {
           ...item,
           regexIns: new RegExp(item.regex),
         }))
+      hover = vscode.workspace.getConfiguration(EX_NAME).get<boolean>('hover') || true
+      inlayHints = vscode.workspace.getConfiguration(EX_NAME).get<boolean>('inlayHints') || true
     }
     catch (error) {
       log.appendLine('refreshing rules error')
@@ -35,7 +39,9 @@ export function activate(ctx: vscode.ExtensionContext) {
 
   ctx.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration((e) => {
-      if (e.affectsConfiguration(EX_RULES)) {
+      if (e.affectsConfiguration(EX_RULES)
+        || e.affectsConfiguration(EX_HOVER)
+        || e.affectsConfiguration(EX_INLAY_HINTS)) {
         refresh()
       }
     }),
@@ -44,6 +50,8 @@ export function activate(ctx: vscode.ExtensionContext) {
   ctx.subscriptions.push(
     vscode.languages.registerHoverProvider('*', {
       provideHover(document, position) {
+        if (!hover)
+          return
         const range = document.getWordRangeAtPosition(position)
         const word = document.getText(range)
 
@@ -100,6 +108,19 @@ export function activate(ctx: vscode.ExtensionContext) {
           })
         }
       }
+    }),
+  )
+
+  ctx.subscriptions.push(
+    vscode.languages.registerInlayHintsProvider('*', {
+      provideInlayHints(document, range) {
+        if (!inlayHints)
+          return
+        const module = loader.getModules()
+        if (module.inlayHints && typeof module.inlayHints === 'function') {
+          return module.inlayHints(document, range)
+        }
+      },
     }),
   )
 }
